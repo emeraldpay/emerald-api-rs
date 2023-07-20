@@ -1,0 +1,16 @@
+= Emerald API for Rust
+
+== Crate Features
+
+Crate is split into different categogies representing different Emerald API services.
+In addition to that, each service can have a Client code, and Server code. Both share the same Protobuf.
+
+To use a particular service client, ex. for a Market API use `market-client` feature. Or `market-server` if you need the server stubs.
+
+.Categories (aka Services) are:
+- `auth` - Auth API (enabled by default if any `*-client` feature is enabled)
+- `blockchain` - Blockchain API
+- `market` - Market API
+- `monitoring` - Monitoring API
+- `transaction` - Transaction API
+
