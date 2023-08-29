@@ -13,25 +13,26 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 			&vec!["api-definitions/proto"]
 		)?;
 
-	let dir = base_dir.join("transaction");
-	fs::create_dir_all(&dir)?;
-	tonic_build::configure()
-		.build_client(true)
-		.build_server(true)
-		.out_dir(dir)
-		.server_mod_attribute("emerald", "#[cfg(feature = \"server-transaction\")]")
-		.client_mod_attribute("emerald", "#[cfg(feature = \"client-transaction\")]")
-		.compile(
-			&vec![
-				"api-definitions/proto/transaction.message.proto",
-				"api-definitions/proto/transaction.proto",
-			],
-			&vec!["api-definitions/proto"]
-		)?;
+	for category in vec!["address", "transaction"] {
+		let dir = base_dir.join("transaction");
+		fs::create_dir_all(&dir)?;
+		tonic_build::configure()
+			.build_client(true)
+			.build_server(true)
+			.out_dir(dir)
+			.server_mod_attribute("emerald", format!("#[cfg(feature = \"server-{}\")]", category).as_str())
+			.client_mod_attribute("emerald", format!("#[cfg(feature = \"client-{}\")]", category).as_str())
+			.compile(
+				&vec![
+					format!("api-definitions/proto/{}.proto", category),
+					format!("api-definitions/proto/{}.message.proto", category),
+				],
+				&vec!["api-definitions/proto"]
+			)?;
+	}
 
 
-	let categories = vec!["auth", "blockchain", "market", "monitoring"];
-	for category in categories {
+	for category in vec!["auth", "blockchain", "market", "monitoring"] {
 
 		let dir = base_dir.join(category);
 		fs::create_dir_all(&dir)?;
@@ -49,7 +50,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 				&vec!["api-definitions/proto"]
 			)?;
 	}
-
 
     Ok(())
 }
