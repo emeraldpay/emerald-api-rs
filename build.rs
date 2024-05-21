@@ -2,6 +2,8 @@ use std::{env, fs};
 use std::path::PathBuf;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+	println!("cargo:rerun-if-changed=api-definitions/proto/");
+
 	let base_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
 
 	tonic_build::configure()

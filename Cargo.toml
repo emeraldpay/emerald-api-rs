@@ -7,12 +7,12 @@ edition = "2021"
 license = "Apache-2.0"
 
 [dependencies]
-tonic = { version = "0.9", features = ["codegen", "prost"], default-features = false }
-prost = "0.11"
-tokio = { version = "1.29", features = ["macros", "rt-multi-thread"], optional = true }
+tonic = { version = "0.11", features = ["codegen", "prost"], default-features = false }
+prost = "0.12"
+tokio = { version = "1.37", features = ["macros", "rt-multi-thread"], optional = true }
 
 [build-dependencies]
-tonic-build = "0.9.2"
+tonic-build = "0.11"
 
 [features]
 default = []
