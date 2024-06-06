@@ -8,7 +8,7 @@ license = "Apache-2.0"
 
 [dependencies]
 tonic = { version = "0.11", features = ["codegen", "prost"], default-features = false }
-prost = "0.12"
+prost = "^0.12"
 tokio = { version = "1.37", features = ["macros", "rt-multi-thread"], optional = true }
 
 [build-dependencies]
