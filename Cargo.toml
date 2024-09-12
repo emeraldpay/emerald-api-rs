@@ -7,16 +7,16 @@ edition = "2021"
 license = "Apache-2.0"
 
 [dependencies]
-tonic = { version = "0.11", features = ["codegen", "prost"], default-features = false }
-prost = "^0.12"
-tokio = { version = "1.37", features = ["macros", "rt-multi-thread"], optional = true }
+tonic = { version = "0.12", features = ["codegen", "prost"], default-features = false }
+prost = "^0.13"
+tokio = { version = "1.38", features = ["macros", "rt-multi-thread"], optional = true }
 
 [build-dependencies]
-tonic-build = "0.11"
+tonic-build = "0.12"
 
 [features]
 default = []
-tonic = ["tonic/transport", "tonic/tls", "tonic/tls-roots", "tonic/tls-roots-common"]
+tonic = ["tonic/transport", "tonic/tls", "tonic/tls-native-roots"]
 client = ["dep:tokio", "tonic", "auth"]
 server = ["dep:tokio", "tonic"]
 

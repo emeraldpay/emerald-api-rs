@@ -49,7 +49,9 @@ pub mod transaction {
 }
 
 pub mod proto {
-    tonic::include_proto!("emerald");
+    pub mod common {
+        tonic::include_proto!("emerald");
+    }
 
     #[cfg(feature = "auth")]
     pub mod auth {
