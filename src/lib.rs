@@ -1,50 +1,62 @@
 extern crate prost;
 
+#[cfg(feature = "auth")]
+pub mod auth {
+    #[cfg(feature = "client-auth")]
+    use crate::creds::AuthService;
+    #[cfg(feature = "client-auth")]
+    use crate::proto::auth::auth_client;
+
+    #[cfg(feature = "client-auth")]
+    pub fn connect(conn: &crate::conn::EmeraldConn) ->  auth_client::AuthClient<AuthService<tonic::transport::Channel>> {
+        auth_client::AuthClient::new(conn.channel())
+    }
+}
+
 #[cfg(feature = "blockchain")]
 pub mod blockchain {
+    #[cfg(feature = "client-blockchain")]
+    use crate::creds::AuthService;
     #[cfg(feature = "client-blockchain")]
     use crate::proto::blockchain::blockchain_client;
 
     #[cfg(feature = "client-blockchain")]
-    pub fn connect(conn: &crate::conn::EmeraldConn) ->  blockchain_client::BlockchainClient<tonic::service::interceptor::InterceptedService<tonic::transport::Channel, crate::creds::Credentials>> {
-        let interceptor: crate::creds::Credentials = conn.credentials.clone();
-        blockchain_client::BlockchainClient::<tonic::transport::Channel>::with_interceptor(conn.into(), interceptor)
+    pub fn connect(conn: &crate::conn::EmeraldConn) ->  blockchain_client::BlockchainClient<AuthService<tonic::transport::Channel>> {
+        blockchain_client::BlockchainClient::new(conn.channel())
     }
 }
 
 #[cfg(feature = "market")]
 pub mod market {
     #[cfg(feature = "client-market")]
-    use crate::proto::market::market_client;
-
+    use crate::creds::AuthService;
     #[cfg(feature = "client-market")]
-    pub fn connect(conn: &crate::conn::EmeraldConn) ->  market_client::MarketClient<tonic::service::interceptor::InterceptedService<tonic::transport::Channel, crate::creds::Credentials>> {
-        let interceptor: crate::creds::Credentials = conn.credentials.clone();
-        market_client::MarketClient::<tonic::transport::Channel>::with_interceptor(conn.into(), interceptor)
+    use crate::proto::market::market_client;
+    #[cfg(feature = "client-market")]
+    pub fn connect(conn: &crate::conn::EmeraldConn) -> market_client::MarketClient<AuthService<tonic::transport::Channel>> {
+        market_client::MarketClient::new(conn.channel())
     }
 }
-
 #[cfg(feature = "monitoring")]
 pub mod monitoring {
     #[cfg(feature = "client-monitoring")]
-    use crate::proto::monitoring::monitoring_client;
-
+    use crate::creds::AuthService;
     #[cfg(feature = "client-monitoring")]
-    pub fn connect(conn: &crate::conn::EmeraldConn) ->  monitoring_client::MonitoringClient<tonic::service::interceptor::InterceptedService<tonic::transport::Channel, crate::creds::Credentials>> {
-        let interceptor: crate::creds::Credentials = conn.credentials.clone();
-        monitoring_client::MonitoringClient::<tonic::transport::Channel>::with_interceptor(conn.into(), interceptor)
+    use crate::proto::monitoring::monitoring_client;
+    #[cfg(feature = "client-monitoring")]
+    pub fn connect(conn: &crate::conn::EmeraldConn) -> monitoring_client::MonitoringClient<AuthService<tonic::transport::Channel>> {
+        monitoring_client::MonitoringClient::new(conn.channel())
     }
 }
-
 #[cfg(feature = "transaction")]
 pub mod transaction {
     #[cfg(feature = "client-transaction")]
-    use crate::proto::transaction::transaction_client;
-
+    use crate::creds::AuthService;
     #[cfg(feature = "client-transaction")]
-    pub fn connect(conn: &crate::conn::EmeraldConn) ->  transaction_client::TransactionClient<tonic::service::interceptor::InterceptedService<tonic::transport::Channel, crate::creds::Credentials>> {
-        let interceptor: crate::creds::Credentials = conn.credentials.clone();
-        transaction_client::TransactionClient::<tonic::transport::Channel>::with_interceptor(conn.into(), interceptor)
+    use crate::proto::transaction::transaction_client;
+    #[cfg(feature = "client-transaction")]
+    pub fn connect(conn: &crate::conn::EmeraldConn) -> transaction_client::TransactionClient<AuthService<tonic::transport::Channel>> {
+        transaction_client::TransactionClient::new(conn.channel())
     }
 }
 

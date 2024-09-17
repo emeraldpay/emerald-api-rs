@@ -10,14 +10,22 @@ license = "Apache-2.0"
 tonic = { version = "0.12", features = ["codegen", "prost"], default-features = false }
 prost = "^0.13"
 tokio = { version = "1.38", features = ["macros", "rt-multi-thread"], optional = true }
+tower = "0.5"
+futures = "0.3.30"
+bytes = "1.7.1"
+http-body = "1.0"
+tracing = "0.1"
 
 [build-dependencies]
 tonic-build = "0.12"
 
+[dev-dependencies]
+tokio-macros = "2.4"
+
 [features]
 default = []
 tonic = ["tonic/transport", "tonic/tls", "tonic/tls-native-roots"]
-client = ["dep:tokio", "tonic", "auth"]
+client = ["dep:tokio", "tonic", "client-auth"]
 server = ["dep:tokio", "tonic"]
 
 auth = []

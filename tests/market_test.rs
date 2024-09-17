@@ -6,11 +6,12 @@ mod on_prod {
     use emerald_api::creds::Credentials;
     use emerald_api::market::connect;
     use emerald_api::proto::market::{GetRatesRequest, GetRatesResponse, Pair};
+    use emerald_api::proto::market::pair::{BaseType, TargetType};
 
     #[tokio::test]
     async fn read_usd_rate() {
-        let conn = EmeraldConn::new(
-            EmeraldConn::standard_api(), Credentials::unauthneticated()
+        let conn = EmeraldConn::connect(
+            Credentials::unauthenticated()
         );
         let mut client = connect(&conn);
         
@@ -18,12 +19,12 @@ mod on_prod {
             GetRatesRequest {
                 pairs: vec![
                     Pair {
-                        base: "ETH".to_string(),
-                        target: "USD".to_string(),
+                        base_type: Some(BaseType::Base("ETH".to_string())),
+                        target_type: Some(TargetType::Target("USD".to_string())),
                     },
                     Pair {
-                        base: "BTC".to_string(),
-                        target: "USD".to_string(),
+                        base_type: Some(BaseType::Base("BTC".to_string())),
+                        target_type: Some(TargetType::Target("USD".to_string())),
                     },
                 ],
             }
