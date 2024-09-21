@@ -15,12 +15,14 @@ futures = "0.3.30"
 bytes = "1.7.1"
 http-body = "1.0"
 tracing = "0.1"
+chrono = "0.4"
 
 [build-dependencies]
 tonic-build = "0.12"
 
 [dev-dependencies]
 tokio-macros = "2.4"
+tracing-subscriber = { version = "0.3" , features = ["env-filter", "fmt"]}
 
 [features]
 default = []

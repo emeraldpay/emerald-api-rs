@@ -34,3 +34,5 @@ impl From<tonic::Status> for Error {
         Error::Transport(format!("Status: {:?}", e))
     }
 }
+
+impl std::error::Error for Error  {}
