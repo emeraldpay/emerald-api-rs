@@ -16,8 +16,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 			&vec!["api-definitions/proto"]
 		)?;
 
-	for category in vec!["address", "transaction"] {
-		let dir = base_dir.join("transaction");
+	for category in vec!["address", "token", "transaction"] {
+		let dir = base_dir.join(category);
 		fs::create_dir_all(&dir)?;
 
 		let builder = tonic_build::configure()

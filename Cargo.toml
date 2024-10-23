@@ -49,3 +49,7 @@ server-monitoring = ["monitoring", "server"]
 transaction = []
 client-transaction = ["transaction", "client"]
 server-transaction = ["transaction", "server"]
+
+token = []
+client-token = ["token", "client"]
+server-token = ["token", "server"]
