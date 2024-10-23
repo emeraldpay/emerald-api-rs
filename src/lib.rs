@@ -60,6 +60,18 @@ pub mod transaction {
     }
 }
 
+#[cfg(feature = "token")]
+pub mod token {
+    #[cfg(feature = "client-token")]
+    use crate::creds::AuthService;
+    #[cfg(feature = "client-token")]
+    use crate::proto::token::token_client;
+    #[cfg(feature = "client-token")]
+    pub fn connect(conn: &crate::conn::EmeraldConn) -> token_client::TokenClient<AuthService<tonic::transport::Channel>> {
+        token_client::TokenClient::new(conn.channel())
+    }
+}
+
 pub mod proto {
     pub mod common {
         tonic::include_proto!("emerald");
@@ -96,6 +108,20 @@ pub mod proto {
         // added as a submodule too because that's how Tonic generates dependencies between proto files
         mod transaction {
             tonic::include_proto!("transaction/emerald.transaction");
+        }
+    }
+
+    #[cfg(feature = "token")]
+    pub mod token {
+        tonic::include_proto!("token/emerald");
+
+        // re-export token types from submodule (also called `token`)
+        // because otherwise you have to repeat the module name twice when using them
+        pub use token::*;
+
+        // added as a submodule too because that's how Tonic generates dependencies between proto files
+        mod token {
+            tonic::include_proto!("token/emerald.token");
         }
     }
 }
