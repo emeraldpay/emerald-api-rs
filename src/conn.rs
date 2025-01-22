@@ -5,6 +5,7 @@ use tonic::transport::ClientTlsConfig;
 use tower::ServiceBuilder;
 use crate::errors::Error;
 
+#[derive(Clone)]
 pub struct EmeraldConn {
     channel: Channel,
     pub(crate) credentials: Arc<RwLock<Credentials>>
