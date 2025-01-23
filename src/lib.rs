@@ -131,4 +131,4 @@ pub mod errors;
 pub mod conn;
 #[cfg(feature = "client")]
 pub mod creds;
-mod common;
+pub mod common;
