@@ -11,7 +11,7 @@ impl FromStr for ChainRef {
         match s.to_lowercase().as_str() {
             "bitcoin" | "btc" | "1" => Ok(ChainRef::ChainBitcoin),
             "ethereum" | "eth" | "100" => Ok(ChainRef::ChainEthereum),
-            "ethereum_classic" | "ethereum-classic" | "etc" | "101" => Ok(ChainRef::ChainEthereum),
+            "ethereum_classic" | "ethereum-classic" | "etc" | "101" => Ok(ChainRef::ChainEthereumClassic),
             "sepolia" | "testnet-sepolia" | "testnet_sepolia" | "10009" => Ok(ChainRef::ChainSepolia),
             _ => Err(()),
         }
@@ -96,5 +96,26 @@ impl TryFrom<ChainRef> for BlockchainType {
             ChainRef::ChainUnspecified => return Err(()),
         };
         Ok(t)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::str::FromStr;
+    use crate::proto::common::ChainRef;
+
+    #[test]
+    fn test_parse_blockchain_names() {
+        assert_eq!(ChainRef::from_str("bitcoin").unwrap(), ChainRef::ChainBitcoin);
+        assert_eq!(ChainRef::from_str("btc").unwrap(), ChainRef::ChainBitcoin);
+
+        assert_eq!(ChainRef::from_str("eth").unwrap(), ChainRef::ChainEthereum);
+        assert_eq!(ChainRef::from_str("ethereum").unwrap(), ChainRef::ChainEthereum);
+        assert_eq!(ChainRef::from_str("ETHEREUM").unwrap(), ChainRef::ChainEthereum);
+
+        assert_eq!(ChainRef::from_str("etc").unwrap(), ChainRef::ChainEthereumClassic);
+        assert_eq!(ChainRef::from_str("ethereum-classic").unwrap(), ChainRef::ChainEthereumClassic);
+        assert_eq!(ChainRef::from_str("ETHEREUM-CLASSIC").unwrap(), ChainRef::ChainEthereumClassic);
+        assert_eq!(ChainRef::from_str("ETHEREUM_CLASSIC").unwrap(), ChainRef::ChainEthereumClassic);
     }
 }
