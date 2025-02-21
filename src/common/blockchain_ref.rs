@@ -8,11 +8,15 @@ impl FromStr for ChainRef {
         if s.starts_with("CHAIN_") {
             return ChainRef::from_str(&s[6..]);
         }
-        match s.to_lowercase().as_str() {
+        match s.to_lowercase()
+            .replace("-", "")
+            .replace("_", "")
+            .as_str() {
             "bitcoin" | "btc" | "1" => Ok(ChainRef::ChainBitcoin),
+            "testnetbitcoin" | "bitcointestnet" | "btctest" | "10003" => Ok(ChainRef::ChainTestnetBitcoin),
             "ethereum" | "eth" | "100" => Ok(ChainRef::ChainEthereum),
-            "ethereum_classic" | "ethereum-classic" | "etc" | "101" => Ok(ChainRef::ChainEthereumClassic),
-            "sepolia" | "testnet-sepolia" | "testnet_sepolia" | "10009" => Ok(ChainRef::ChainSepolia),
+            "ethereumclassic" | "etc" | "101" => Ok(ChainRef::ChainEthereumClassic),
+            "sepolia" | "testnetsepolia" | "sepoliatestnet" | "10009" => Ok(ChainRef::ChainSepolia),
             _ => Err(()),
         }
     }
@@ -108,6 +112,7 @@ mod tests {
     fn test_parse_blockchain_names() {
         assert_eq!(ChainRef::from_str("bitcoin").unwrap(), ChainRef::ChainBitcoin);
         assert_eq!(ChainRef::from_str("btc").unwrap(), ChainRef::ChainBitcoin);
+        assert_eq!(ChainRef::from_str("testnet_bitcoin").unwrap(), ChainRef::ChainTestnetBitcoin);
 
         assert_eq!(ChainRef::from_str("eth").unwrap(), ChainRef::ChainEthereum);
         assert_eq!(ChainRef::from_str("ethereum").unwrap(), ChainRef::ChainEthereum);
