@@ -6,7 +6,11 @@ mod on_mock {
         creds::{Credentials, JwtState},
         proto::auth::{
             auth_server::Auth, AuthRequest, AuthResponse,
-            IssueTokenRequest, IssuedTokenResponse, ListTokensRequest, ListTokensResponse, RefreshRequest, WhoAmIRequest, WhoAmIResponse
+            IssueTokenRequest, IssuedTokenResponse,
+            ListTokensRequest, ListTokensResponse,
+            RefreshRequest,
+            WhoAmIRequest, WhoAmIResponse,
+            DeleteTokenRequest, DeleteTokenResponse
         },
     };
     use tonic::{transport::Server, Request, Response, Status};
@@ -73,6 +77,12 @@ mod on_mock {
             self.request_count.fetch_add(1, Ordering::Relaxed);
             todo!()
         }
+
+        async fn delete_token(&self, _request: Request<DeleteTokenRequest>) -> Result<Response<DeleteTokenResponse>, Status> {
+            self.request_count.fetch_add(1, Ordering::Relaxed);
+            todo!()
+        }
+
     }
 
     fn enable_tracing() -> tracing::dispatcher::DefaultGuard {
@@ -91,13 +101,15 @@ mod on_mock {
         let mock_service = MockAuthService {
             request_count: request_count.clone(),
             response_pos: Arc::new(AtomicUsize::new(0)),
-            responses: vec![AuthResponse {
-                status: 0,
-                access_token: "jwt_001".to_string(),
-                refresh_token: "refresh_001".to_string(),
-                expires_at: 1750000000000, // Some fixed timestamp
-                ..Default::default()
-            }],
+            responses: vec![
+                AuthResponse {
+                    status: 0,
+                    access_token: "jwt_001".to_string(),
+                    refresh_token: "refresh_001".to_string(),
+                    expires_at: 1800000000000, // Some fixed timestamp
+                    ..Default::default()
+                }
+            ],
         };
 
 

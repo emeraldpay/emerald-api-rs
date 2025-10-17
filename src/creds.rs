@@ -3,8 +3,8 @@ use tonic::{
     Status,
     client::GrpcService,
     codegen::{http, StdError},
-    transport::{Body},
-    body::BoxBody
+    transport,
+    body::Body
 };
 use http::Response;
 use std::task::{Context, Poll};
@@ -73,13 +73,13 @@ pub struct AuthService<S> {
     credentials: Arc<RwLock<Credentials>>,
 }
 
-impl<S> Service<http::Request<BoxBody>> for AuthService<S>
+impl<S> Service<http::Request<Body>> for AuthService<S>
 where
-    S: GrpcService<BoxBody> + Send + 'static + Clone,
+    S: GrpcService<Body> + Send + 'static + Clone,
     S::Future: Send + 'static,
     S::Error: Into<Error> + 'static,
-    S::ResponseBody: Body<Data = Bytes> + Send + 'static,
-    <S::ResponseBody as Body>::Error: Into<StdError> + Send,
+    S::ResponseBody: transport::Body<Data = Bytes> + Send + 'static,
+    <S::ResponseBody as transport::Body>::Error: Into<StdError> + Send,
 {
     type Response = Response<S::ResponseBody>;
     type Error = Error;
@@ -89,7 +89,7 @@ where
         self.inner.poll_ready(cx).map_err(Into::into)
     }
 
-    fn call(&mut self, mut req: http::Request<BoxBody>) -> Self::Future {
+    fn call(&mut self, mut req: http::Request<Body>) -> Self::Future {
         let credentials_global = self.credentials.clone();
 
         // This is necessary because tonic internally uses `tower::buffer::Buffer`.
@@ -143,20 +143,20 @@ where
 
 impl<S> AuthService<S>
 where
-    S: GrpcService<BoxBody> + Send + 'static + Clone,
+    S: GrpcService<Body> + Send + 'static + Clone,
     S::Future: Send + 'static,
     S::Error: Into<Error> + 'static,
-    S::ResponseBody: Body<Data = Bytes> + Send + 'static,
-    <S::ResponseBody as Body>::Error: Into<StdError> + Send, {
+    S::ResponseBody: transport::Body<Data = Bytes> + Send + 'static,
+    <S::ResponseBody as transport::Body>::Error: Into<StdError> + Send, {
 
-    fn add_auth_header(req: &mut http::Request<BoxBody>, jwt: &str) {
+    fn add_auth_header(req: &mut http::Request<Body>, jwt: &str) {
         req.headers_mut().insert(
             "authorization",
             format!("Bearer {}", jwt).parse().unwrap(),
         );
     }
 
-    async fn process_auth(req: &mut http::Request<BoxBody>, credentials: Arc<RwLock<Credentials>>, jwt: Result<JwtState, Status>) -> Result<(), Status> {
+    async fn process_auth(req: &mut http::Request<Body>, credentials: Arc<RwLock<Credentials>>, jwt: Result<JwtState, Status>) -> Result<(), Status> {
         match jwt {
             Ok(jwt) => {
                 {
@@ -251,10 +251,10 @@ impl AuthLayer {
 
 impl<S> Layer<S> for AuthLayer
 where
-    S: GrpcService<BoxBody>,
+    S: GrpcService<Body>,
     S::Error: Into<Error>,
-    S::ResponseBody: Body<Data = Bytes> + Send + 'static,
-    <S::ResponseBody as Body>::Error: Into<Error> + Send,
+    S::ResponseBody: transport::Body<Data = Bytes> + Send + 'static,
+    <S::ResponseBody as transport::Body>::Error: Into<Error> + Send,
 {
 
     type Service = AuthService<S>;

@@ -1,15 +1,15 @@
 use std::{env, fs};
 use std::path::PathBuf;
-use tonic_build::Builder;
+use tonic_prost_build::Builder;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
 	println!("cargo:rerun-if-changed=api-definitions/proto/");
 
 	let base_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
 
-	tonic_build::configure()
+    tonic_prost_build::configure()
 		.out_dir(&base_dir)
-		.compile(
+		.compile_protos(
 			&vec![
 				"api-definitions/proto/common.proto",
 			],
@@ -20,19 +20,19 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 		let dir = base_dir.join(category);
 		fs::create_dir_all(&dir)?;
 
-		let builder = tonic_build::configure()
+		let builder = tonic_prost_build::configure()
 			.build_client(true)
 			.build_server(true)
 			.out_dir(dir)
 			.server_mod_attribute("emerald", format!("#[cfg(feature = \"server-{}\")]", category).as_str())
 			.client_mod_attribute("emerald", format!("#[cfg(feature = \"client-{}\")]", category).as_str());
 		let builder = link_common(builder);
-		builder.compile(
+		builder.compile_protos(
 				&vec![
 					format!("api-definitions/proto/{}.proto", category),
 					format!("api-definitions/proto/{}.message.proto", category),
 				],
-				&vec!["api-definitions/proto"]
+				&vec!["api-definitions/proto".to_string()]
 			)?;
 	}
 
@@ -41,18 +41,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 		let dir = base_dir.join(category);
 		fs::create_dir_all(&dir)?;
 
-		let builder = tonic_build::configure()
+		let builder = tonic_prost_build::configure()
 			.build_client(true)
 			.build_server(true)
 			.out_dir(dir)
 			.server_mod_attribute("emerald", format!("#[cfg(feature = \"server-{}\")]", category).as_str())
 			.client_mod_attribute("emerald", format!("#[cfg(feature = \"client-{}\")]", category).as_str());
 		let builder = link_common(builder);
-		builder.compile(
+		builder.compile_protos(
 				&vec![
 					format!("api-definitions/proto/{}.proto", category),
 				],
-				&vec!["api-definitions/proto"]
+				&vec!["api-definitions/proto".to_string()]
 			)?;
 	}
 
