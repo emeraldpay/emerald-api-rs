@@ -16,7 +16,7 @@ impl FromStr for ChainRef {
             "testnetbitcoin" | "bitcointestnet" | "btctest" | "10003" => Ok(ChainRef::ChainTestnetBitcoin),
             "ethereum" | "eth" | "100" => Ok(ChainRef::ChainEthereum),
             "ethereumclassic" | "etc" | "101" => Ok(ChainRef::ChainEthereumClassic),
-            "sepolia" | "testnetsepolia" | "sepoliatestnet" | "10009" => Ok(ChainRef::ChainSepolia),
+            "sepolia" | "testnetsepolia" | "sepoliatestnet" | "10009" | "11155111" => Ok(ChainRef::ChainSepolia),
             _ => Err(()),
         }
     }
