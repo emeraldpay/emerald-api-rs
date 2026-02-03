@@ -14,9 +14,14 @@ impl FromStr for ChainRef {
             .as_str() {
             "bitcoin" | "btc" | "1" => Ok(ChainRef::ChainBitcoin),
             "testnetbitcoin" | "bitcointestnet" | "btctest" | "10003" => Ok(ChainRef::ChainTestnetBitcoin),
+            "testnetbitcoin4" | "testnetbitcoinv4" |
+                "bitcointestnet4" | "bitcointestnetv4" |
+                "btctest4" | "btctestv4" |
+                "10004" => Ok(ChainRef::ChainTestnetBitcoin4),
             "ethereum" | "eth" | "100" => Ok(ChainRef::ChainEthereum),
             "ethereumclassic" | "etc" | "101" => Ok(ChainRef::ChainEthereumClassic),
             "sepolia" | "testnetsepolia" | "sepoliatestnet" | "10009" | "11155111" => Ok(ChainRef::ChainSepolia),
+            "hoodi" | "testnethoodi" | "hooditestnet" | "10010" => Ok(ChainRef::ChainHoodi),
             _ => Err(()),
         }
     }
@@ -38,11 +43,13 @@ impl ChainRef {
             ChainRef::ChainMorden => "MORDEN".to_string(),
             ChainRef::ChainKovan => "KOVAN".to_string(),
             ChainRef::ChainTestnetBitcoin => "TESTNET_BITCOIN".to_string(),
+            ChainRef::ChainTestnetBitcoin4 => "TESTNET_BITCOIN_4".to_string(),
             ChainRef::ChainGoerli => "GOERLI".to_string(),
             ChainRef::ChainRopsten => "ROPSTEN".to_string(),
             ChainRef::ChainRinkeby => "RINKEBY".to_string(),
             ChainRef::ChainHolesky => "HOLESKY".to_string(),
             ChainRef::ChainSepolia => "SEPOLIA".to_string(),
+            ChainRef::ChainHoodi => "HOODI".to_string(),
         }
     }
 
@@ -60,11 +67,13 @@ impl ChainRef {
             ChainRef::ChainMorden => "Morden".to_string(),
             ChainRef::ChainKovan => "Kovan".to_string(),
             ChainRef::ChainTestnetBitcoin => "Bitcoin Testnet".to_string(),
+            ChainRef::ChainTestnetBitcoin4 => "Bitcoin Testnet v4".to_string(),
             ChainRef::ChainGoerli => "Goerli Testnet".to_string(),
             ChainRef::ChainRopsten => "Ropsten Testnet".to_string(),
             ChainRef::ChainRinkeby => "Rinkeby Testnet".to_string(),
             ChainRef::ChainHolesky => "Holesky Testnet".to_string(),
             ChainRef::ChainSepolia => "Sepolia Testnet".to_string(),
+            ChainRef::ChainHoodi => "Hoodi Testnet".to_string(),
         }
     }
 }
@@ -80,7 +89,8 @@ impl TryFrom<ChainRef> for BlockchainType {
     fn try_from(value: ChainRef) -> Result<Self, Self::Error> {
         let t = match value {
             ChainRef::ChainBitcoin |
-            ChainRef::ChainTestnetBitcoin
+            ChainRef::ChainTestnetBitcoin |
+            ChainRef::ChainTestnetBitcoin4
                 => BlockchainType::Bitcoin,
 
             ChainRef::ChainEthereum |
@@ -94,7 +104,8 @@ impl TryFrom<ChainRef> for BlockchainType {
             ChainRef::ChainRinkeby |
             ChainRef::ChainRopsten |
             ChainRef::ChainHolesky |
-            ChainRef::ChainSepolia
+            ChainRef::ChainSepolia |
+            ChainRef::ChainHoodi
                 => BlockchainType::Ethereum,
 
             ChainRef::ChainUnspecified => return Err(()),
@@ -113,6 +124,8 @@ mod tests {
         assert_eq!(ChainRef::from_str("bitcoin").unwrap(), ChainRef::ChainBitcoin);
         assert_eq!(ChainRef::from_str("btc").unwrap(), ChainRef::ChainBitcoin);
         assert_eq!(ChainRef::from_str("testnet_bitcoin").unwrap(), ChainRef::ChainTestnetBitcoin);
+        assert_eq!(ChainRef::from_str("testnet_bitcoin_4").unwrap(), ChainRef::ChainTestnetBitcoin4);
+        assert_eq!(ChainRef::from_str("testnet_bitcoin_v4").unwrap(), ChainRef::ChainTestnetBitcoin4);
 
         assert_eq!(ChainRef::from_str("eth").unwrap(), ChainRef::ChainEthereum);
         assert_eq!(ChainRef::from_str("ethereum").unwrap(), ChainRef::ChainEthereum);
