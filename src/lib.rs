@@ -60,6 +60,18 @@ pub mod transaction {
     }
 }
 
+#[cfg(feature = "address")]
+pub mod address {
+    #[cfg(feature = "client-address")]
+    use crate::creds::AuthService;
+    #[cfg(feature = "client-address")]
+    use crate::proto::address::address_client;
+    #[cfg(feature = "client-address")]
+    pub fn connect(conn: &crate::conn::EmeraldConn) -> address_client::AddressClient<AuthService<tonic::transport::Channel>> {
+        address_client::AddressClient::new(conn.channel())
+    }
+}
+
 #[cfg(feature = "token")]
 pub mod token {
     #[cfg(feature = "client-token")]
@@ -108,6 +120,17 @@ pub mod proto {
         // added as a submodule too because that's how Tonic generates dependencies between proto files
         mod transaction {
             tonic::include_proto!("transaction/emerald.transaction");
+        }
+    }
+
+    #[cfg(feature = "address")]
+    pub mod address {
+        tonic::include_proto!("address/emerald");
+
+        pub use address::*;
+
+        mod address {
+            tonic::include_proto!("address/emerald.address");
         }
     }
 
