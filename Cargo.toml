@@ -58,3 +58,7 @@ server-token = ["token", "server"]
 address = []
 client-address = ["address", "client"]
 server-address = ["address", "server"]
+
+sierra = []
+client-sierra = ["sierra", "client"]
+server-sierra = ["sierra", "server"]

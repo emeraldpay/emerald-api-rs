@@ -84,6 +84,41 @@ pub mod token {
     }
 }
 
+#[cfg(feature = "sierra")]
+pub mod sierra {
+
+    #[cfg(feature = "client-sierra")]
+    pub mod org {
+        use crate::creds::AuthService;
+        use crate::proto::sierra::org_client;
+
+        pub fn connect(conn: &crate::conn::EmeraldConn) -> org_client::OrgClient<AuthService<tonic::transport::Channel>> {
+            org_client::OrgClient::new(conn.channel())
+        }
+    }
+
+    #[cfg(feature = "client-sierra")]
+    pub mod project {
+        use crate::creds::AuthService;
+        use crate::proto::sierra::project_client;
+
+        pub fn connect(conn: &crate::conn::EmeraldConn) -> project_client::ProjectClient<AuthService<tonic::transport::Channel>> {
+            project_client::ProjectClient::new(conn.channel())
+        }
+    }
+
+    #[cfg(feature = "client-sierra")]
+    pub mod stat {
+        use crate::creds::AuthService;
+        use crate::proto::sierra::stat_client;
+
+        pub fn connect(conn: &crate::conn::EmeraldConn) -> stat_client::StatClient<AuthService<tonic::transport::Channel>> {
+            stat_client::StatClient::new(conn.channel())
+        }
+    }
+
+}
+
 pub mod proto {
     pub mod common {
         tonic::include_proto!("emerald");
@@ -145,6 +180,20 @@ pub mod proto {
         // added as a submodule too because that's how Tonic generates dependencies between proto files
         mod token {
             tonic::include_proto!("token/emerald.token");
+        }
+    }
+
+    #[cfg(feature = "sierra")]
+    pub mod sierra {
+        tonic::include_proto!("sierra/emerald.sierra");
+
+        // re-export token types from submodule
+        // because otherwise you have to repeat the module name twice when using them
+        pub use message::*;
+
+        // added as a submodule too because that's how Tonic generates dependencies between proto files
+        mod message {
+            tonic::include_proto!("sierra/emerald.sierra.message");
         }
     }
 }

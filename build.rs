@@ -16,7 +16,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 			&vec!["api-definitions/proto"]
 		)?;
 
-	for category in vec!["address", "token", "transaction"] {
+	for category in vec!["address", "token", "transaction", "sierra"] {
 		let dir = base_dir.join(category);
 		fs::create_dir_all(&dir)?;
 
