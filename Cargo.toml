@@ -2,7 +2,7 @@
 name = "emerald-api"
 description = "Emerald API"
 repository = "https://github.com/emeraldpay/emerald-api-rs"
-version = "0.1.0-dev"
+version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0"
 
