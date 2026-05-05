@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout the code
         uses: actions/checkout@v5
+        with:
+          submodules: true
 
       - name: Install Rust
         run: rustup toolchain add --profile=minimal stable
