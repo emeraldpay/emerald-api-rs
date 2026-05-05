@@ -11,9 +11,14 @@ jobs:
     steps:
       - name: Checkout the code
         uses: actions/checkout@v5
+        with:
+          submodules: true
 
       - name: Install Rust
         run: rustup toolchain add --profile=minimal stable
+
+      - name: Install system libs
+        run: sudo apt-get install protobuf-compiler
 
       - name: Publish to Crates
         run: cargo publish --token ${{ secrets.CRATES_TOKEN }}
