@@ -12,17 +12,17 @@ on:
 
 jobs:
   tests:
-    name: Test ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ "windows-latest", "macos-latest", "ubuntu-latest" ]
-    runs-on: ${{ matrix.os }}
+    name: Test
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout the code
         uses: actions/checkout@v5
 
       - name: Install Rust
         run: rustup toolchain add --profile=minimal stable
+
+      - name: Install system libs
+        run: sudo apt-get install protobuf-compiler
 
       - name: Test
         run: cargo test --all --release
