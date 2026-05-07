@@ -192,7 +192,7 @@ where
         let response = response.into_inner();
 
         if response.status != 0 {
-            return Err(Status::unauthenticated(format!("Status: {}", response.status)));
+            return Err(Status::unauthenticated(format!("{}: {}", response.status, response.deny_message)));
         }
 
         tracing::trace!("Authenticated with JWT");
