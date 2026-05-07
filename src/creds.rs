@@ -17,23 +17,39 @@ use crate::proto::auth::{auth_client, auth_request, AuthRequest, AuthResponse, R
 
 #[derive(Debug, Clone)]
 pub enum Credentials {
+
+    /// No credentials, just for plain unauthenticated calls
     None,
+
+    ///
+    /// Authenticated with a JWT token
     Token(JwtState),
 }
 
 #[derive(Debug, Clone)]
 pub enum JwtState {
+    ///
+    /// An initial state of the API connection. Exchanges it to JWT on first use.
     Initial{
+        ///
+        /// A secret token to exchange for a JWT
         secret: String
     },
     Authenticated {
+        /// JWT received to authenticate future calls
         jwt: String,
+        /// Expiration time of the JWT token; client automatically refreshes the JWT before that moment
+        expires_at: DateTime<Utc>,
+        /// a secret token that can be exchanged for another JWT before the expiration time
         refresh: String,
-        expires_at: DateTime<Utc>
     }
 }
 
 impl JwtState {
+    ///
+    /// Create a new initial state of JWT auth
+    ///
+    /// @param secret - secret token for exchanging for a JWT token, e.g., an API token
     pub fn new(secret: String) -> Self {
         JwtState::Initial {
             secret
@@ -50,7 +66,7 @@ impl Default for Credentials {
 impl Credentials {
 
     ///
-    /// Do nothing
+    /// Do nothing, for plain unauthenticated calls
     pub fn unauthenticated() -> Self {
         Credentials::None
     }
