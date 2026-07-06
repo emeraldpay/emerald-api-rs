@@ -13,7 +13,7 @@ use futures::future::BoxFuture;
 use crate::errors::Error;
 use bytes::Bytes;
 use chrono::{DateTime, Utc};
-use crate::proto::auth::{auth_client, auth_request, AuthRequest, AuthResponse, RefreshRequest};
+use crate::proto::auth::{auth_client, AuthRequest, AuthResponse, RefreshRequest};
 
 #[derive(Debug, Clone)]
 pub enum Credentials {
@@ -200,7 +200,7 @@ where
         tracing::trace!("Authenticating...");
 
         let request = tonic::Request::new(AuthRequest {
-            auth_type: Some(auth_request::AuthType::AuthSecret(token.clone())),
+            auth_secret: token.clone(),
             ..Default::default()
         });
 
