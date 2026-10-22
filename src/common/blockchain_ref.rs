@@ -13,7 +13,10 @@ impl FromStr for ChainRef {
             .replace("_", "")
             .as_str() {
             "bitcoin" | "btc" | "1" => Ok(ChainRef::ChainBitcoin),
-            "testnetbitcoin" | "bitcointestnet" | "btctest" | "10003" => Ok(ChainRef::ChainTestnetBitcoin),
+            "testnetbitcoin" | "testnetbitcoin3" | "testnetbitcoinv3" |
+                "bitcointestnet" | "bitcointestnet3" | "bitcointestnetv3" |
+                "btctest" | "btctest3" | "btctestv3" |
+                "10003" => Ok(ChainRef::ChainTestnetBitcoin),
             "testnetbitcoin4" | "testnetbitcoinv4" |
                 "bitcointestnet4" | "bitcointestnetv4" |
                 "btctest4" | "btctestv4" |
@@ -124,6 +127,7 @@ mod tests {
         assert_eq!(ChainRef::from_str("bitcoin").unwrap(), ChainRef::ChainBitcoin);
         assert_eq!(ChainRef::from_str("btc").unwrap(), ChainRef::ChainBitcoin);
         assert_eq!(ChainRef::from_str("testnet_bitcoin").unwrap(), ChainRef::ChainTestnetBitcoin);
+        assert_eq!(ChainRef::from_str("testnet-bitcoin-v3").unwrap(), ChainRef::ChainTestnetBitcoin);
         assert_eq!(ChainRef::from_str("testnet_bitcoin_4").unwrap(), ChainRef::ChainTestnetBitcoin4);
         assert_eq!(ChainRef::from_str("testnet_bitcoin_v4").unwrap(), ChainRef::ChainTestnetBitcoin4);
 
