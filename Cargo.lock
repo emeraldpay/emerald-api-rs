@@ -176,6 +176,7 @@ dependencies = [
  "futures",
  "http-body",
  "prost",
+ "prost-types",
  "tokio",
  "tokio-macros",
  "tonic",
