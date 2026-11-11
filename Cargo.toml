@@ -11,7 +11,7 @@ tonic = { version = "0.14", features = ["codegen", "router"], default-features =
 tonic-prost = "0.14"
 prost = "^0.14"
 prost-types = "^0.14"
-tokio = { version = "1.48", features = ["macros", "rt-multi-thread"], optional = true }
+tokio = { version = "1.48", features = ["macros", "rt-multi-thread", "sync", "time"], optional = true }
 tower = "0.5"
 futures = "0.3.30"
 bytes = "1.7.1"
@@ -24,6 +24,7 @@ tonic-prost-build = "0.14"
 
 [dev-dependencies]
 tokio-macros = "2.6"
+tokio-stream = { version = "0.1", features = ["net"] }
 tracing-subscriber = { version = "0.3" , features = ["env-filter", "fmt"]}
 
 [features]

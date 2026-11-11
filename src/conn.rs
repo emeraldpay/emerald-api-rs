@@ -1,6 +1,6 @@
-use std::sync::{Arc, RwLock};
+use std::sync::Arc;
 use tonic::transport::{Channel, Uri};
-use crate::creds::{AuthLayer, AuthService, Credentials};
+use crate::creds::{AuthLayer, AuthService, AuthSession, Credentials};
 use tonic::transport::ClientTlsConfig;
 use tower::ServiceBuilder;
 use crate::errors::Error;
@@ -8,7 +8,7 @@ use crate::errors::Error;
 #[derive(Clone)]
 pub struct EmeraldConn {
     channel: Channel,
-    pub(crate) credentials: Arc<RwLock<Credentials>>
+    session: Arc<AuthSession>,
 }
 
 impl EmeraldConn {
@@ -22,15 +22,16 @@ impl EmeraldConn {
     pub fn new(channel: Channel, cred: Credentials) -> Self {
         Self {
             channel,
-            credentials: Arc::new(RwLock::new(cred)),
+            session: Arc::new(AuthSession::new(cred)),
         }
     }
 
     ///
-    /// Get gRPC channel tp use for API call, with the credentials layer.
+    /// Get gRPC channel to use for API call, with the credentials layer.
+    /// All channels of the same connection share its credentials, i.e., they authenticate only once.
     ///
     pub fn channel(&self) -> AuthService<Channel> {
-        let auth_layer = AuthLayer::new(self.credentials.clone());
+        let auth_layer = AuthLayer::new(Arc::clone(&self.session));
 
         ServiceBuilder::new()
             .layer(auth_layer)
@@ -69,7 +70,7 @@ impl EmeraldConn {
     }
 
     pub fn get_credentials(&self) -> Credentials {
-        self.credentials.read().unwrap().clone()
+        self.session.credentials()
     }
 }
 
