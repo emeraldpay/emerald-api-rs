@@ -117,6 +117,16 @@ pub mod sierra {
         }
     }
 
+    #[cfg(feature = "client-sierra")]
+    pub mod billing {
+        use crate::creds::AuthService;
+        use crate::proto::sierra::billing_client;
+
+        pub fn connect(conn: &crate::conn::EmeraldConn) -> billing_client::BillingClient<AuthService<tonic::transport::Channel>> {
+            billing_client::BillingClient::new(conn.channel())
+        }
+    }
+
 }
 
 pub mod proto {
